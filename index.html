@@ -29,11 +29,6 @@
   </style>
   <script type="text/javascript">
     $(document).ready(function(){
-      $('img.fancy').each(function(image) {
-        var image_title = $(this).attr('title');
-        $(this).wrap('<div class="image" />');
-        $(this).after("<h2><span>"+image_title+"</span></h2>");
-      });
       $(".image").hover(
         function () {
           $(this).find("h2").fadeIn();
@@ -42,14 +37,28 @@
           $(this).find("h2").fadeOut();
         }
       );
-    });
+      $(".image").each(function() {
+        var apiKey = '844c54d33c43bdde4fa79ce68df6505d';
+        var photoID = $(this).attr('id');
+        var container= $(this);
+        $.getJSON('http://api.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key='+apiKey+'&photo_id='+photoID+'&format=json&nojsoncallback=1',
+          function(data){
+            var photo = data.photo;
+            var basePhotoURL = 'http://farm' + photo.farm + '.static.flickr.com/' + photo.server + '/' + photo.id + '_' + photo.secret+'_b.'+photo.originalformat;
+            container.append('<img src ='+basePhotoURL+'>');
+            container.append("<h2><span>"+photo.title._content+"</span></h2>");
+          });
+        });
+
+      });
   </script>
 </head>
 <body>
   <div id="main">
     <div class="article">
-      <img src="http://farm8.staticflickr.com/7242/6972829914_54ea9c450a_o.jpg" title="petals in the spring" class='fancy'>
-      <img src="http://farm8.staticflickr.com/7257/7104703423_6be059d834_o.jpg" title="por que no" class='fancy'>
+      <div class="image" id="6914996244"></div>
+      <div class="image" id="6957976164"></div>
+      <div class="image" id="6070827576"></div>
     </div>
   </div>
 </body>
